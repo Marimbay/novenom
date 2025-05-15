@@ -1,4 +1,4 @@
-# 🐍 NoVenom — AI-Powered Venomous Creature Detection
+# 🐍 NoVenom AI-Powered Venomous Creature Detection
 
 **NoVenom** is a lightweight AI-based web application that helps users identify whether an insect or small animal is venomous - just by uploading a photo. Designed to run on a **Raspberry Pi**, it uses the **Hugging Face Inference API** to process images in the cloud and return accurate classifications in real time.
 
