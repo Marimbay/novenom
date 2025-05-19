@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}NoVenom – Upload Image{% endblock %}
+
+{% block content %}
+  <section class="section upload-page">
+    <h1>Upload Your Creature Photo</h1>
+    {% if error %}
+      <div class="error">{{ error }}</div>
+    {% endif %}
+    <form method="post" enctype="multipart/form-data" class="upload-form">
+      <input type="file" name="file" accept="image/*" required/>
+      <button type="submit" class="btn">Upload</button>
+    </form>
+
+    {% if image_url %}
+      <div class="preview-card">
+        <h2>Preview</h2>
+        <img src="{{ image_url }}" alt="Uploaded Preview"/>
+      </div>
+    {% endif %}
+  </section>
+{% endblock %}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>{% block title %}NoVenom{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+</head>
+<body>
+
+  <!-- HEADER / NAV -->
+  <header>
+    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="NoVenom Logo" class="logo"/>
+    <nav>
+      <a href="/">Home</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#features">Features</a>
+      <a href="#demo">Demo</a>
+      <a href="#contact">Contact</a>
+      <a href="/upload">Upload</a>
+    </nav>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>&copy; 2025 NoVenom. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>

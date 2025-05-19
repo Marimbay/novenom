@@ -1,0 +1,193 @@
+/* Global & Selection */
+html {
+  font-size: 18px;
+}
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.6;
+  background-color: #000; /* fallback */
+  color: #fff;
+}
+::selection {
+  background-color: #6B8E23;
+  color: #fff;
+}
+
+/* Header */
+header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 100;
+}
+header .logo {
+  height: 40px;
+}
+nav a {
+  margin-left: 1rem;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+nav a:hover {
+  color: #6B8E23;
+}
+
+/* Hero */
+.hero {
+  position: relative;
+  height: 100vh;
+  background: url('../images/bg-forest-day1.png') no-repeat center/cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+.hero > * {
+  position: relative;
+  z-index: 1;
+}
+.hero h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+.hero button.upload {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.125rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #6B8E23;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.hero button.upload:hover {
+  transform: scale(1.05);
+}
+
+/* Section Blocks */
+.section {
+  padding: 4rem 1rem;
+  text-align: center;
+  color: #fff;
+}
+.section:nth-child(odd) {
+  background: rgba(0, 0, 0, 0.3);
+}
+.section:nth-child(even) {
+  background: rgba(0, 0, 0, 15%);
+}
+.section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Steps / How It Works */
+.steps {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.step {
+  max-width: 200px;
+}
+.step img {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 1rem;
+}
+.step h3 {
+  margin: 0.5rem 0;
+  font-size: 1.5rem;
+}
+
+/* Features List */
+.features-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.features-list li {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  font-size: 1.125rem;
+}
+
+/* Demo */
+#demo button {
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.125rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #f2c94c;
+  color: #000;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+#demo button:hover {
+  background-color: #e1b242;
+}
+
+/* Upload Section */
+.upload-section {
+  max-width: 600px;
+  margin: 6rem auto;
+  text-align: center;
+}
+.upload-section input[type=file] {
+  margin: 1rem 0;
+}
+.upload-section button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.125rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #6B8E23;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.upload-section button:hover {
+  background-color: #5a7b1e;
+}
+.uploaded-preview {
+  margin-top: 2rem;
+  max-width: 100%;
+  height: auto;
+  border: 2px solid #fff;
+  border-radius: 0.5rem;
+}
+.error {
+  color: #ff6666;
+  font-weight: bold;
+}
+
+/* Footer */
+.footer {
+  padding: 2rem 1rem;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.7);
+  font-size: 0.875rem;
+  color: #fff;
+  margin-top: 4rem;
+}
