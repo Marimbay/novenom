@@ -1,8 +1,9 @@
-import os, sys
-print(">>> TEMPLATE_FOLDER:", os.path.join(os.path.dirname(__file__), 'templates'), file=sys.stderr)
 from flask import Flask, render_template, request, url_for
 import os
 from werkzeug.utils import secure_filename
+from huggingface_hub import InferenceClient  
+import json  
+import traceback 
 
 app = Flask(__name__)
 
