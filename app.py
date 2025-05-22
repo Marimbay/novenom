@@ -1,7 +1,8 @@
-import os, sys
-print(">>> TEMPLATE_FOLDER:", os.path.join(os.path.dirname(__file__), 'templates'), file=sys.stderr)
 from flask import Flask, render_template, request, url_for
 from werkzeug.utils import secure_filename
+from huggingface_hub import InferenceClient  
+import json  
+import traceback 
 
 # 여기에 본인의 예측 함수 import
 # from your_model_module import model_predict
