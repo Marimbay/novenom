@@ -1,11 +1,10 @@
+import os
 from flask import Flask, render_template, request, url_for
 from werkzeug.utils import secure_filename
-from huggingface_hub import InferenceClient  
-import json  
-import traceback 
-
-# 여기에 본인의 예측 함수 import
-# from your_model_module import model_predict
+from transformers import AutoImageProcessor, AutoModelForImageClassification
+from PIL import Image
+import torch
+import json
 
 app = Flask(__name__)
 
@@ -16,11 +15,46 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # Allowed file extensions
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
+# Load the model and processor
+MODEL_NAME = "microsoft/resnet-50"  # We'll use ResNet-50 as a base model
+processor = AutoImageProcessor.from_pretrained(MODEL_NAME)
+model = AutoModelForImageClassification.from_pretrained(MODEL_NAME)
+
 def allowed_file(filename):
-    return (
-        '.' in filename and
-        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-    )
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def analyze_image(image_path):
+    try:
+        # Load and preprocess the image
+        image = Image.open(image_path)
+        inputs = processor(images=image, return_tensors="pt")
+        
+        # Get model predictions
+        with torch.no_grad():
+            outputs = model(**inputs)
+            logits = outputs.logits
+            probabilities = torch.nn.functional.softmax(logits, dim=-1)
+            
+        # Get the top prediction
+        top_prob, top_class = torch.max(probabilities, dim=1)
+        
+        # For demonstration, we'll consider certain classes as potentially venomous
+        # This is a simplified example - in a real application, you'd want to use a
+        # model specifically trained for venomous creature detection
+        venomous_classes = ['spider', 'snake', 'scorpion', 'wasp', 'bee']
+        class_name = model.config.id2label[top_class.item()]
+        
+        # Check if the predicted class is in our venomous list
+        is_venomous = any(venomous in class_name.lower() for venomous in venomous_classes)
+        
+        return {
+            'is_venomous': is_venomous,
+            'confidence': float(top_prob.item()),
+            'class_name': class_name
+        }
+    except Exception as e:
+        print(f"Error analyzing image: {str(e)}")
+        return None
 
 @app.route('/', methods=['GET'])
 def index():
@@ -31,9 +65,10 @@ def upload_image():
     error = None
     image_url = None
     result = None
+    confidence = None
+    class_name = None
 
     if request.method == 'POST':
-        # Check file part
         if 'file' not in request.files:
             error = 'No file part'
         else:
@@ -47,23 +82,24 @@ def upload_image():
                 file.save(filepath)
                 image_url = url_for('static', filename=f'uploads/{filename}')
 
-                # === 모델 예측 호출 ===
-                # is_safe = model_predict(filepath)
-                # result = "안전합니다 ✅" if is_safe else "안전하지 않습니다 ⚠️"
-                # === 예시 ===
-                # 임시로 랜덤 결과
-                import random
-                is_safe = random.choice([True, False])
-                result = "Safe ✅" if is_safe else "Unsafe ⚠️"
-                # =======================
+                # Analyze the image
+                analysis = analyze_image(filepath)
+                if analysis:
+                    result = "Potentially Venomous ⚠️" if analysis['is_venomous'] else "Safe ✅"
+                    confidence = f"{analysis['confidence']:.2%}"
+                    class_name = analysis['class_name']
+                else:
+                    error = 'Error analyzing image'
 
             else:
                 error = 'File type not allowed'
 
     return render_template('upload.html',
-                           error=error,
-                           image_url=image_url,
-                           result=result)
+                         error=error,
+                         image_url=image_url,
+                         result=result,
+                         confidence=confidence,
+                         class_name=class_name)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

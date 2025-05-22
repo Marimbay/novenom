@@ -1,4 +1,7 @@
 flask
-Werkzeug
-requests
-huggingface_hub
+werkzeug
+transformers
+torch
+pillow
+python-dotenv
+huggingface-hub
