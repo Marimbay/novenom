@@ -18,6 +18,13 @@
         <h2>Preview</h2>
         <img src="{{ image_url }}" alt="Uploaded Preview"/>
       </div>
+
+      {% if result %}
+      <div class="result-card">
+        <h2>Analysis Result</h2>
+        <p class="result-text">{{ result }}</p>
+      </div>
+      {% endif %}
     {% endif %}
   </section>
 {% endblock %}

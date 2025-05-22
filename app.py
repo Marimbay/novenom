@@ -1,8 +1,10 @@
 import os, sys
 print(">>> TEMPLATE_FOLDER:", os.path.join(os.path.dirname(__file__), 'templates'), file=sys.stderr)
 from flask import Flask, render_template, request, url_for
-import os
 from werkzeug.utils import secure_filename
+
+# 여기에 본인의 예측 함수 import
+# from your_model_module import model_predict
 
 app = Flask(__name__)
 
@@ -27,6 +29,7 @@ def index():
 def upload_image():
     error = None
     image_url = None
+    result = None
 
     if request.method == 'POST':
         # Check file part
@@ -42,10 +45,24 @@ def upload_image():
                 filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 file.save(filepath)
                 image_url = url_for('static', filename=f'uploads/{filename}')
+
+                # === 모델 예측 호출 ===
+                # is_safe = model_predict(filepath)
+                # result = "안전합니다 ✅" if is_safe else "안전하지 않습니다 ⚠️"
+                # === 예시 ===
+                # 임시로 랜덤 결과
+                import random
+                is_safe = random.choice([True, False])
+                result = "Safe ✅" if is_safe else "Unsafe ⚠️"
+                # =======================
+
             else:
                 error = 'File type not allowed'
 
-    return render_template('upload.html', error=error, image_url=image_url)
+    return render_template('upload.html',
+                           error=error,
+                           image_url=image_url,
+                           result=result)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
