@@ -23,7 +23,7 @@ Whether you're out in the field or examining a backyard critter, NoVenom helps y
 
 - **Hardware**: Raspberry Pi 3/4 or newer  
 - **Backend**: Python + Flask  
-- **AI**: Hugging Face Inference API  
+- **AI**: Hugging Face trasnformer  
 - **Frontend**: HTML (Jinja2 templating)
 
 
