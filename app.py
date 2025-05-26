@@ -1,10 +1,8 @@
 import os
 from flask import Flask, render_template, request, url_for
 from werkzeug.utils import secure_filename
-from transformers import AutoImageProcessor, AutoModelForImageClassification
-from PIL import Image
-import torch
-import json
+import requests
+import base64
 
 app = Flask(__name__)
 
@@ -15,43 +13,26 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # Allowed file extensions
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
-# Load the model and processor
-MODEL_NAME = "microsoft/resnet-50"  # We'll use ResNet-50 as a base model
-processor = AutoImageProcessor.from_pretrained(MODEL_NAME)
-model = AutoModelForImageClassification.from_pretrained(MODEL_NAME)
+# AI Server configuration
+AI_SERVER_URL = "http://127.0.0.1:5001"  # Replace with your laptop's IP address
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def analyze_image(image_path):
     try:
-        # Load and preprocess the image
-        image = Image.open(image_path)
-        inputs = processor(images=image, return_tensors="pt")
+        # Read image and convert to base64
+        with open(image_path, 'rb') as image_file:
+            image_data = base64.b64encode(image_file.read()).decode('utf-8')
         
-        # Get model predictions
-        with torch.no_grad():
-            outputs = model(**inputs)
-            logits = outputs.logits
-            probabilities = torch.nn.functional.softmax(logits, dim=-1)
-            
-        # Get the top prediction
-        top_prob, top_class = torch.max(probabilities, dim=1)
+        # Send to AI server
+        response = requests.post(AI_SERVER_URL, json={'image': image_data})
         
-        # For demonstration, we'll consider certain classes as potentially venomous
-        # This is a simplified example - in a real application, you'd want to use a
-        # model specifically trained for venomous creature detection
-        venomous_classes = ['spider', 'snake', 'scorpion', 'wasp', 'bee']
-        class_name = model.config.id2label[top_class.item()]
-        
-        # Check if the predicted class is in our venomous list
-        is_venomous = any(venomous in class_name.lower() for venomous in venomous_classes)
-        
-        return {
-            'is_venomous': is_venomous,
-            'confidence': float(top_prob.item()),
-            'class_name': class_name
-        }
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print(f"Error from AI server: {response.text}")
+            return None
     except Exception as e:
         print(f"Error analyzing image: {str(e)}")
         return None
