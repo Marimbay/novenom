@@ -15,15 +15,9 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # Allowed file extensions
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
-# Load the model and processor - using a lighter model
-MODEL_NAME = "google/mobilenet_v2_1.0_224"  # Much lighter than ResNet-50
-print("Loading model and processor...")
-processor = AutoImageProcessor.from_pretrained(MODEL_NAME)
-model = AutoModelForImageClassification.from_pretrained(MODEL_NAME)
-# Move model to CPU and set to evaluation mode
-model = model.cpu()
-model.eval()
-print("Model loaded successfully!")
+# AI Server configuration
+AI_SERVER_URL = "http://10.89.56.215:5001/analyze"  # Replace with your laptop's IP address
+
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
