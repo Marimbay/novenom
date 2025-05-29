@@ -122,7 +122,7 @@ def upload_image():
 
             analysis = analyze_image(filepath)
             if analysis:
-                is_venomous = analysis['is_venomous']
+                is_venomous = analysis.get('is_venomous', False)
                 result = "Venomous" if is_venomous else "Not Venomous"
                 confidence = analysis['confidence']
                 animal_name = analysis['class_name']
