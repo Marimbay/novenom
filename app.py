@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request, url_for
 import os
+from flask import Flask, render_template, request, url_for
 from werkzeug.utils import secure_filename
-from huggingface_hub import InferenceClient  
-import json  
-import traceback 
+from transformers import AutoImageProcessor, AutoModelForImageClassification
+from PIL import Image
+import torch
+import gc
 
 app = Flask(__name__)
 
@@ -14,11 +15,54 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # Allowed file extensions
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
+# Load the model and processor - using a lighter model
+MODEL_NAME = "google/mobilenet_v2_1.0_224"  # Much lighter than ResNet-50
+print("Loading model and processor...")
+processor = AutoImageProcessor.from_pretrained(MODEL_NAME)
+model = AutoModelForImageClassification.from_pretrained(MODEL_NAME)
+# Move model to CPU and set to evaluation mode
+model = model.cpu()
+model.eval()
+print("Model loaded successfully!")
+
 def allowed_file(filename):
-    return (
-        '.' in filename and
-        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-    )
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def analyze_image(image_path):
+    try:
+        # Load and preprocess the image
+        image = Image.open(image_path)
+        # Resize image to reduce memory usage
+        image = image.resize((224, 224))
+        inputs = processor(images=image, return_tensors="pt")
+        
+        # Get model predictions
+        with torch.no_grad():
+            outputs = model(**inputs)
+            logits = outputs.logits
+            probabilities = torch.nn.functional.softmax(logits, dim=-1)
+            
+        # Get the top prediction
+        top_prob, top_class = torch.max(probabilities, dim=1)
+        
+        # Check for venomous creatures
+        venomous_classes = ['spider', 'snake', 'scorpion', 'wasp', 'bee']
+        class_name = model.config.id2label[top_class.item()]
+        is_venomous = any(venomous in class_name.lower() for venomous in venomous_classes)
+        
+        # Clear memory
+        del outputs, logits, probabilities
+        gc.collect()
+        torch.cuda.empty_cache() if torch.cuda.is_available() else None
+        
+        return {
+            'is_venomous': is_venomous,
+            'confidence': float(top_prob.item()),
+            'class_name': class_name
+        }
+    except Exception as e:
+        print(f"Error analyzing image: {str(e)}")
+        return None
 
 @app.route('/', methods=['GET'])
 def index():
@@ -28,9 +72,11 @@ def index():
 def upload_image():
     error = None
     image_url = None
+    result = None
+    confidence = None
+    class_name = None
 
     if request.method == 'POST':
-        # Check file part
         if 'file' not in request.files:
             error = 'No file part'
         else:
@@ -43,10 +89,26 @@ def upload_image():
                 filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 file.save(filepath)
                 image_url = url_for('static', filename=f'uploads/{filename}')
+
+                # Analyze the image
+                analysis = analyze_image(filepath)
+                if analysis:
+                    result = "Potentially Venomous ⚠️" if analysis['is_venomous'] else "Safe ✅"
+                    confidence = f"{analysis['confidence']:.2%}"
+                    class_name = analysis['class_name']
+                else:
+                    error = 'Error analyzing image'
+
             else:
                 error = 'File type not allowed'
 
-    return render_template('upload.html', error=error, image_url=image_url)
+    return render_template('upload.html',
+                         error=error,
+                         image_url=image_url,
+                         result=result,
+                         confidence=confidence,
+                         class_name=class_name)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    # Set Flask to production mode
+    app.run(host='0.0.0.0', port=5000, debug=False, threaded=True)
