@@ -155,13 +155,16 @@ def history():
         c = conn.cursor()
         predictions = c.execute('SELECT * FROM predictions ORDER BY timestamp DESC LIMIT 10').fetchall()
         
-        # Convert timestamp strings to datetime objects
+        # Convert Row objects to dictionaries and handle timestamp conversion
+        predictions_list = []
         for pred in predictions:
-            if isinstance(pred['timestamp'], str):
-                pred['timestamp'] = datetime.strptime(pred['timestamp'], '%Y-%m-%d %H:%M:%S.%f')
+            pred_dict = dict(pred)
+            if isinstance(pred_dict['timestamp'], str):
+                pred_dict['timestamp'] = datetime.strptime(pred_dict['timestamp'], '%Y-%m-%d %H:%M:%S.%f')
+            predictions_list.append(pred_dict)
         
         conn.close()
-        return render_template('history.html', predictions=predictions)
+        return render_template('history.html', predictions=predictions_list)
     except Exception as e:
         app.logger.error(f"Error fetching history: {str(e)}")
         flash('Error loading prediction history', 'error')
