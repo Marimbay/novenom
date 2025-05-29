@@ -82,10 +82,11 @@ def save_prediction(filename, is_venomous, animal_name, confidence, image_path):
     try:
         conn = get_db()
         c = conn.cursor()
+        current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
         c.execute('''
             INSERT INTO predictions (filename, timestamp, is_venomous, animal_name, confidence, image_path)
             VALUES (?, ?, ?, ?, ?, ?)
-        ''', (filename, datetime.now(), is_venomous, animal_name, confidence, image_path))
+        ''', (filename, current_time, is_venomous, animal_name, confidence, image_path))
         conn.commit()
     except Exception as e:
         app.logger.error(f"Error saving prediction: {str(e)}")
@@ -153,6 +154,12 @@ def history():
         conn = get_db()
         c = conn.cursor()
         predictions = c.execute('SELECT * FROM predictions ORDER BY timestamp DESC LIMIT 10').fetchall()
+        
+        # Convert timestamp strings to datetime objects
+        for pred in predictions:
+            if isinstance(pred['timestamp'], str):
+                pred['timestamp'] = datetime.strptime(pred['timestamp'], '%Y-%m-%d %H:%M:%S.%f')
+        
         conn.close()
         return render_template('history.html', predictions=predictions)
     except Exception as e:
