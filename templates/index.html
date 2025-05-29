@@ -1,66 +1,101 @@
 cd ~/NoVenom/templates
 cat << 'EOF' > index.html
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block title %}NoVenom – Home{% endblock %}
 
 {% block content %}
-  <!-- Hero Section (Upload 버튼 유지!) -->
-  <section class="hero">
-    <div class="container">
-      <h1>Detect Venomous Creatures with AI</h1>
-      <a href="/upload" class="btn upload">Upload Image</a>
-    </div>
-  </section>
-
-  <!-- How It Works Section -->
-  <section id="how-it-works" class="section section--light">
-    <div class="container">
-      <h2>How It Works</h2>
-      <div class="steps">
-        <div class="step">
-          <img src="{{ url_for('static', filename='images/icons/upload.png') }}" alt="Upload Icon"/>
-          <h3>Upload Photo</h3>
-          <p>Choose or drag &amp; drop an image of a creature.</p>
+<div class="space-y-12">
+    <!-- Hero Section -->
+    <div class="text-center py-12">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">
+            Identify Venomous Creatures with AI
+        </h1>
+        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+            Upload a photo of any insect or small creature, and our AI will instantly tell you if it's venomous.
+        </p>
+        <div class="mt-8">
+            <a href="{{ url_for('upload_image') }}" class="btn btn-primary text-lg">
+                <i class="fas fa-upload mr-2"></i>Upload Photo
+            </a>
         </div>
-        <div class="step">
-          <img src="{{ url_for('static', filename='images/icons/analysis.png') }}" alt="Analysis Icon"/>
-          <h3>AI Analysis</h3>
-          <p>Our cloud model processes and classifies it.</p>
-        </div>
-        <div class="step">
-          <img src="{{ url_for('static', filename='images/icons/download.png') }}" alt="Download Icon"/>
-          <h3>View &amp; Download</h3>
-          <p>See venom status and download your report.</p>
-        </div>
-      </div>
     </div>
-  </section>
 
-  <!-- Core Features Section -->
-  <section id="features" class="section section--light">
-    <div class="container">
-      <h2>Core Features</h2>
-      <ul class="features-list">
-        <li>Fast, Accurate Detection</li>
-        <li>High-Res Image Support</li>
-        <li>Batch Processing</li>
-        <li>Secure &amp; Private</li>
-      </ul>
-    </div>
-  </section>
+    <!-- Features Grid -->
+    <div class="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto px-4">
+        <div class="card">
+            <div class="text-center">
+                <i class="fas fa-camera text-4xl text-green-600 mb-4"></i>
+                <h3 class="text-xl font-semibold mb-2">Easy Upload</h3>
+                <p class="text-gray-600">Simply take a photo and upload it through our intuitive interface.</p>
+            </div>
+        </div>
 
-  <!-- Contact Section -->
-  <section id="contact" class="section contact-section">
-    <div class="container contact-container">
-      <h2>Contact Us</h2>
-      <p class="contact-intro">
-        We’re a small Australian AI lab based in QUT, located in Kelvin Grove, Brisbane.
-      </p>
-      <p class="contact-email">
-        <a href="mailto:support@novenom.com">support@novenom.com</a>
-      </p>
+        <div class="card">
+            <div class="text-center">
+                <i class="fas fa-brain text-4xl text-green-600 mb-4"></i>
+                <h3 class="text-xl font-semibold mb-2">AI Analysis</h3>
+                <p class="text-gray-600">Our advanced AI model analyzes the image in real-time.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="text-center">
+                <i class="fas fa-shield-alt text-4xl text-green-600 mb-4"></i>
+                <h3 class="text-xl font-semibold mb-2">Instant Results</h3>
+                <p class="text-gray-600">Get immediate feedback about the creature's venom status.</p>
+            </div>
+        </div>
     </div>
-  </section>
+
+    <!-- How It Works -->
+    <div class="bg-white py-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">How It Works</h2>
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div class="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-green-600">1</span>
+                    </div>
+                    <h3 class="font-semibold mb-2">Take Photo</h3>
+                    <p class="text-gray-600">Capture a clear image of the creature</p>
+                </div>
+
+                <div class="text-center">
+                    <div class="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-green-600">2</span>
+                    </div>
+                    <h3 class="font-semibold mb-2">Upload</h3>
+                    <p class="text-gray-600">Submit the image through our interface</p>
+                </div>
+
+                <div class="text-center">
+                    <div class="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-green-600">3</span>
+                    </div>
+                    <h3 class="font-semibold mb-2">AI Analysis</h3>
+                    <p class="text-gray-600">Our model processes the image</p>
+                </div>
+
+                <div class="text-center">
+                    <div class="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-green-600">4</span>
+                    </div>
+                    <h3 class="font-semibold mb-2">Get Results</h3>
+                    <p class="text-gray-600">Receive instant venom status</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="text-center py-12">
+        <h2 class="text-3xl font-bold mb-4">Ready to Try?</h2>
+        <p class="text-xl text-gray-600 mb-8">Start identifying venomous creatures in seconds</p>
+        <a href="{{ url_for('upload_image') }}" class="btn btn-primary text-lg">
+            <i class="fas fa-upload mr-2"></i>Upload Now
+        </a>
+    </div>
+</div>
 {% endblock %}
 EOF
