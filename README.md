@@ -35,7 +35,11 @@ cd <repository-name>
 
 4. Install Python dependencies:
 ```bash
+# First install base requirements
 pip3 install -r requirements.txt
+
+# Then install PyTorch specifically for Raspberry Pi
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
 ```
 
 ## Running the Application
@@ -71,6 +75,11 @@ sudo dphys-swapfile swapon
    - Check internet connection
    - Ensure you have enough free disk space
    - Try running with sudo if permission issues occur
+
+3. If PyTorch installation fails:
+   - Make sure you're using the correct command for Raspberry Pi
+   - Try installing with sudo if you get permission errors
+   - Check your Python version (should be 3.7 or newer)
 
 ## License
 MIT License
