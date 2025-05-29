@@ -22,7 +22,7 @@ DATABASE_PATH = os.path.join(app.root_path, 'novenom.db')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 # AI Server configuration
-AI_SERVER_URL = "http://10.88.17.11:5001/analyze"  # Replace with your laptop's IP address
+AI_SERVER_URL = "http://10.89.56.215:5001/analyze"  # Replace with your laptop's IP address
 
 def init_db():
     """Initialize the SQLite database with required tables."""
@@ -123,8 +123,8 @@ def upload_image():
 
             analysis = analyze_image(filepath)
             if analysis:
-                is_venomous = analysis.get('is_venomous', False)
-                result = "Venomous" if is_venomous else "Not Venomous"
+                not_venomous = analysis.get('is_venomous', False)
+                result = "Not Venomous" if not_venomous else "Venomous"
                 confidence = analysis['confidence']
                 animal_name = analysis['class_name']
                 
