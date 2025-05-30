@@ -8,6 +8,7 @@ import sqlite3
 from pathlib import Path
 import atexit
 import shutil
+import uuid
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Required for flash messages
@@ -25,6 +26,27 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 # AI Server configuration
 AI_SERVER_URL = "http://10.89.56.215:5001/analyze"  # Replace with your laptop's IP address
+
+def get_unique_filename(original_filename):
+    """Generate a unique filename using UUID and original extension."""
+    ext = original_filename.rsplit('.', 1)[1].lower() if '.' in original_filename else ''
+    return f"{uuid.uuid4().hex}.{ext}"
+
+def clean_species_name(name):
+    """Clean and format the species name."""
+    if not name:
+        return "Unknown Species"
+    
+    # Split by comma and take the first part
+    name = name.split(',')[0].strip()
+    
+    # Capitalize each word
+    name = ' '.join(word.capitalize() for word in name.split())
+    
+    # Remove any extra spaces
+    name = ' '.join(name.split())
+    
+    return name
 
 def cleanup():
     """Clean up database and upload folder when the app exits."""
@@ -77,15 +99,7 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def analyze_image(image_path):
-    """
-    Analyze an image using the AI server.
-    
-    Args:
-        image_path (str): Path to the image file
-        
-    Returns:
-        dict: Analysis results including venom status and confidence
-    """
+    """Analyze an image using the AI server."""
     try:
         with open(image_path, 'rb') as image_file:
             image_data = base64.b64encode(image_file.read()).decode('utf-8')
@@ -101,6 +115,10 @@ def analyze_image(image_path):
         app.logger.error(f"Error analyzing image: {str(e)}")
         return None
 
+def get_venom_status(is_venomous):
+    """Get consistent venom status label."""
+    return "Venomous" if is_venomous else "Not Venomous"
+
 def save_prediction(filename, is_venomous, animal_name, confidence, image_url):
     """Save prediction results to the database."""
     try:
@@ -109,10 +127,7 @@ def save_prediction(filename, is_venomous, animal_name, confidence, image_url):
         current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
         
         # Clean up animal name
-        animal_name = animal_name.strip().title()
-        if ',' in animal_name:
-            # Take the first part if there are multiple terms
-            animal_name = animal_name.split(',')[0].strip()
+        animal_name = clean_species_name(animal_name)
         
         c.execute('''
             INSERT INTO predictions (filename, timestamp, is_venomous, animal_name, confidence, image_path)
@@ -123,10 +138,6 @@ def save_prediction(filename, is_venomous, animal_name, confidence, image_url):
         app.logger.error(f"Error saving prediction: {str(e)}")
     finally:
         conn.close()
-
-def get_venom_status(is_venomous):
-    """Get consistent venom status label."""
-    return "Venomous" if is_venomous else "Not Venomous"
 
 @app.route('/', methods=['GET'])
 def index():
@@ -151,10 +162,12 @@ def upload_image():
             return redirect(request.url)
 
         try:
-            filename = secure_filename(file.filename)
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            # Generate unique filename
+            original_filename = secure_filename(file.filename)
+            unique_filename = get_unique_filename(original_filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
             file.save(filepath)
-            image_url = url_for('static', filename=f'uploads/{filename}')
+            image_url = url_for('static', filename=f'uploads/{unique_filename}')
 
             analysis = analyze_image(filepath)
             if analysis:
@@ -164,7 +177,7 @@ def upload_image():
                 animal_name = analysis['class_name']
                 
                 # Save prediction to database
-                save_prediction(filename, is_venomous, animal_name, confidence, image_url)
+                save_prediction(unique_filename, is_venomous, animal_name, confidence, image_url)
                 
                 return render_template('upload.html',
                                      image_url=image_url,
