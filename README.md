@@ -100,6 +100,7 @@ novenom/
 ├── app.py              # Flask application
 ├── ai_server.py        # AI model server
 ├── requirements.txt    # Dependencies
+├── requirements_pi.txt # For Raspberry Pi
 ├── static/
 │   ├── css/           # Stylesheets
 │   └── uploads/       # Image storage
