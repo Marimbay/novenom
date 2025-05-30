@@ -1,12 +1,35 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="max-w-7xl mx-auto">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="card">
         <h1 class="text-3xl font-bold mb-8">Prediction History</h1>
 
         {% if predictions %}
-        <div class="overflow-x-auto">
+        <!-- Mobile view -->
+        <div class="sm:hidden space-y-4">
+            {% for pred in predictions %}
+            <div class="bg-white rounded-lg shadow p-4 border border-gray-100">
+                <div class="flex items-center space-x-4">
+                    <img src="{{ pred.image_path }}" alt="Prediction image" class="h-20 w-20 object-cover rounded-lg">
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-gray-900 truncate">
+                            {{ pred.animal_name|title|replace(',', '')|replace('  ', ' ')|trim }}
+                        </p>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {% if pred.is_venomous %}bg-red-100 text-red-800{% else %}bg-green-100 text-green-800{% endif %}">
+                            {{ pred.result }}
+                        </span>
+                        <p class="text-xs text-gray-500 mt-1">
+                            {{ pred.timestamp.strftime('%Y-%m-%d %H:%M') }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Desktop view -->
+        <div class="hidden sm:block overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
@@ -24,7 +47,9 @@
                             <img src="{{ pred.image_path }}" alt="Prediction image" class="h-16 w-16 object-cover rounded-lg">
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">{{ pred.animal_name }}</div>
+                            <div class="text-sm font-medium text-gray-900">
+                                {{ pred.animal_name|title|replace(',', '')|replace('  ', ' ')|trim }}
+                            </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {% if pred.is_venomous %}bg-red-100 text-red-800{% else %}bg-green-100 text-green-800{% endif %}">

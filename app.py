@@ -101,16 +101,23 @@ def analyze_image(image_path):
         app.logger.error(f"Error analyzing image: {str(e)}")
         return None
 
-def save_prediction(filename, is_venomous, animal_name, confidence, image_path):
+def save_prediction(filename, is_venomous, animal_name, confidence, image_url):
     """Save prediction results to the database."""
     try:
         conn = get_db()
         c = conn.cursor()
         current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+        
+        # Clean up animal name
+        animal_name = animal_name.strip().title()
+        if ',' in animal_name:
+            # Take the first part if there are multiple terms
+            animal_name = animal_name.split(',')[0].strip()
+        
         c.execute('''
             INSERT INTO predictions (filename, timestamp, is_venomous, animal_name, confidence, image_path)
             VALUES (?, ?, ?, ?, ?, ?)
-        ''', (filename, current_time, is_venomous, animal_name, confidence, image_path))
+        ''', (filename, current_time, is_venomous, animal_name, confidence, image_url))
         conn.commit()
     except Exception as e:
         app.logger.error(f"Error saving prediction: {str(e)}")
