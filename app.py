@@ -174,7 +174,7 @@ def upload_image():
                 is_venomous = analysis['is_venomous']
                 result = get_venom_status(is_venomous)
                 confidence = analysis['confidence']
-                animal_name = analysis['class_name']
+                animal_name = clean_species_name(analysis['class_name'])
                 
                 # Save prediction to database
                 save_prediction(unique_filename, is_venomous, animal_name, confidence, image_url)
