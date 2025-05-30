@@ -1,138 +1,155 @@
-# NoVenom - AI-Powered Venom Detection
+# NoVenom 🕷️
 
-NoVenom is a web application that uses artificial intelligence to detect and identify potentially venomous creatures from uploaded images. The application provides instant analysis and maintains a history of predictions for reference.
+```
+ _   _  _____  __   __  _____  _   _  __   __  ___  __      __
+| \ | ||  _  | \ \ / / |  _  || \ | | \ \ / / |_  | \ \    / /
+|  \| || | | |  \ V /  | | | ||  \| |  \ V /    | |  \ \  / / 
+| . ` || | | |  /   \  | | | || . ` |  /   \    | |   \ \/ /  
+| |\  |\ \_/ / / /^\ \ \ \_/ /| |\  | / /^\ \/\_/ /     \  /   
+\_| \_/ \___/  \/   \/  \___/ \_| \_/ \/   \/\___/       \/    
+```
 
-## Features
+[![Python](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-2.x-green.svg)](https://flask.palletsprojects.com/)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-2.x-38B2AC.svg)](https://tailwindcss.com/)
+[![SQLite](https://img.shields.io/badge/SQLite-3.x-003B57.svg)](https://www.sqlite.org/)
 
-- 🖼️ **Image Upload**: Drag-and-drop or file selection interface for easy image uploads
-- 🤖 **AI Analysis**: Real-time analysis of uploaded images using a pre-trained ResNet-50 model
-- 🎯 **Venom Detection**: Identifies whether the creature in the image is venomous
-- 📊 **Confidence Scoring**: Shows the confidence level of each prediction
-- 📝 **Species Identification**: Identifies and displays the species name in a clean, professional format
-- 📱 **Responsive Design**: Modern UI that works seamlessly on both desktop and mobile devices
-- 📚 **Prediction History**: Maintains a history of previous predictions with detailed information
-- 🔒 **Secure Storage**: Unique file naming and secure storage of uploaded images
+> A sophisticated web application leveraging AI for venom detection and species identification.
 
-## Tech Stack
+## 📋 Overview
 
-### Backend
-- **Python 3.x**: Core programming language
-- **Flask**: Web framework
-- **SQLite**: Database for storing prediction history
-- **Requests**: HTTP library for API communication
-- **Werkzeug**: File handling and security utilities
+NoVenom is a Flask-based web application that leverages artificial intelligence to analyze images of creatures and determine their venom status. The application features a modern, responsive interface and maintains a comprehensive history of predictions.
 
-### Frontend
-- **HTML5**: Structure
-- **Tailwind CSS**: Utility-first CSS framework for styling
-- **JavaScript**: Client-side interactivity
-- **Font Awesome**: Icon library
+## ✨ Core Features
 
-### AI/ML
-- **PyTorch**: Deep learning framework
-- **Transformers**: Hugging Face's library for state-of-the-art NLP
-- **ResNet-50**: Pre-trained model for image classification
+### 🔍 Image Analysis
+- Real-time AI-powered image processing
+- Venom status detection
+- Species identification
+- Confidence scoring
 
-## Prerequisites
+### 🎨 User Interface
+- Intuitive drag-and-drop upload
+- Responsive design for all devices
+- Real-time progress indicators
+- Clean, professional results display
+
+### 💾 Data Management
+- Secure image storage
+- Prediction history tracking
+- SQLite database integration
+- Unique file naming system
+
+## 🏗️ Technical Architecture
+
+### Backend Components
+| Component | Technology |
+|-----------|------------|
+| Web Framework | Flask |
+| Database | SQLite |
+| File Handling | Werkzeug |
+| API Communication | Requests |
+
+### Frontend Implementation
+| Component | Technology |
+|-----------|------------|
+| Framework | Tailwind CSS |
+| Icons | Font Awesome |
+| Templates | Jinja2 |
+| Interactivity | Vanilla JavaScript |
+
+### AI Integration
+| Component | Technology |
+|-----------|------------|
+| Model | ResNet-50 |
+| Framework | PyTorch |
+| Library | Hugging Face Transformers |
+
+## ⚙️ System Requirements
 
 - Python 3.x
-- pip (Python package manager)
 - Modern web browser
 - Internet connection
+- 500MB free disk space
 
-## Installation
+## 🚀 Installation
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/novenom.git
-   cd novenom
-   ```
-
-2. Create and activate a virtual environment (recommended):
+1. **Environment Setup**
    ```bash
    python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   source venv/bin/activate  # Windows: venv\Scripts\activate
    ```
 
-3. Install the required packages:
+2. **Dependencies**
    ```bash
    pip install -r requirements.txt
    ```
 
-4. Initialize the database:
+3. **Database Initialization**
    ```bash
    python init_db.py
    ```
 
-## Configuration
+## ⚡ Configuration
 
-1. Update the AI server URL in `app.py`:
-   ```python
-   AI_SERVER_URL = "http://your-ai-server:5001/analyze"
-   ```
+### AI Server
+```python
+AI_SERVER_URL = "http://your-ai-server:5001/analyze"
+```
 
-2. Configure the upload folder path if needed:
-   ```python
-   UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')
-   ```
+### File Storage
+```python
+UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')
+```
 
-## Running the Application
-
-1. Start the Flask application:
-   ```bash
-   python app.py
-   ```
-
-2. Access the application in your web browser:
-   ```
-   http://localhost:5000
-   ```
-
-## Project Structure
+## 📁 Application Structure
 
 ```
 novenom/
-├── app.py              # Main Flask application
+├── app.py              # Flask application
 ├── ai_server.py        # AI model server
-├── requirements.txt    # Python dependencies
+├── requirements.txt    # Dependencies
 ├── static/
-│   ├── css/           # CSS files
-│   └── uploads/       # Uploaded images
+│   ├── css/           # Stylesheets
+│   └── uploads/       # Image storage
 ├── templates/         # HTML templates
 │   ├── base.html
 │   ├── index.html
 │   ├── upload.html
 │   └── history.html
-└── novenom.db        # SQLite database
+└── novenom.db        # Database
 ```
 
-## Usage
+## 📖 Usage Guide
 
-1. Navigate to the upload page
-2. Upload an image of a creature
-3. Wait for the AI analysis
-4. View the results:
-   - Venom status
-   - Identified species
-   - Confidence level
-5. Check the history page for past predictions
+### 1. Image Upload
+- Navigate to the upload page
+- Select or drag an image
+- Wait for processing
 
-## Contributing
+### 2. Results View
+- Venom status indicator
+- Species identification
+- Confidence metrics
+- Historical data access
 
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
+## 🆘 Support
 
-## License
+For technical support or inquiries, please contact the development team.
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+## 📦 Dependencies
 
-## Acknowledgments
+- Flask
+- PyTorch
+- Transformers
+- SQLite3
+- Tailwind CSS
+- Font Awesome
 
-- Hugging Face for the Transformers library
-- Flask team for the web framework
-- Tailwind CSS team for the styling framework
+---
+
+<div align="center">
+Made with ❤️ by the NoVenom Team
+</div>
 
 
