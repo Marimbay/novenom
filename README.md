@@ -1,14 +1,5 @@
 # NoVenom 🕷️
 
-```
- _   _  _____  __   __  _____  _   _  __   __  ___  __      __
-| \ | ||  _  | \ \ / / |  _  || \ | | \ \ / / |_  | \ \    / /
-|  \| || | | |  \ V /  | | | ||  \| |  \ V /    | |  \ \  / / 
-| . ` || | | |  /   \  | | | || . ` |  /   \    | |   \ \/ /  
-| |\  |\ \_/ / / /^\ \ \ \_/ /| |\  | / /^\ \/\_/ /     \  /   
-\_| \_/ \___/  \/   \/  \___/ \_| \_/ \/   \/\___/       \/    
-```
-
 [![Python](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/)
 [![Flask](https://img.shields.io/badge/Flask-2.x-green.svg)](https://flask.palletsprojects.com/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-2.x-38B2AC.svg)](https://tailwindcss.com/)
