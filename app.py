@@ -6,6 +6,8 @@ import requests
 import base64
 import sqlite3
 from pathlib import Path
+import atexit
+import shutil
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Required for flash messages
@@ -22,7 +24,29 @@ DATABASE_PATH = os.path.join(app.root_path, 'novenom.db')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 # AI Server configuration
-AI_SERVER_URL = "http://10.89.56.215:5001/analyze"  # Replace with your laptop's IP address
+AI_SERVER_URL = "http://10.88.17.11:5001/analyze"  # Replace with your laptop's IP address
+
+def cleanup():
+    """Clean up database and upload folder when the app exits."""
+    try:
+        # Delete all files in the upload folder
+        if os.path.exists(UPLOAD_FOLDER):
+            shutil.rmtree(UPLOAD_FOLDER)
+            os.makedirs(UPLOAD_FOLDER)
+        
+        # Clear the database
+        conn = sqlite3.connect(DATABASE_PATH)
+        c = conn.cursor()
+        c.execute('DELETE FROM predictions')
+        conn.commit()
+        conn.close()
+        
+        app.logger.info("Cleanup completed successfully")
+    except Exception as e:
+        app.logger.error(f"Error during cleanup: {str(e)}")
+
+# Register cleanup function to run on exit
+atexit.register(cleanup)
 
 def init_db():
     """Initialize the SQLite database with required tables."""

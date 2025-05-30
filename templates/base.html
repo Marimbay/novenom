@@ -35,6 +35,13 @@
     .not-venomous {
       @apply text-green-600 font-bold;
     }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .animate-spin {
+      animation: spin 2s linear infinite;
+    }
   </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -60,6 +67,12 @@
               History
             </a>
           </div>
+        </div>
+        <!-- Mobile history icon -->
+        <div class="sm:hidden flex items-center">
+          <a href="{{ url_for('history') }}" class="text-gray-500 hover:text-green-600 transition-colors duration-200">
+            <i class="fas fa-history animate-spin text-xl"></i>
+          </a>
         </div>
       </div>
     </div>
