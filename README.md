@@ -5,7 +5,7 @@
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-2.x-38B2AC.svg)](https://tailwindcss.com/)
 [![SQLite](https://img.shields.io/badge/SQLite-3.x-003B57.svg)](https://www.sqlite.org/)
 
-> A sophisticated web application leveraging AI for venom detection and species identification.
+>  AI-powered web application for venom detection and species identification.
 
 ## 📋 Overview
 
@@ -20,7 +20,7 @@ NoVenom is a Flask-based web application that leverages artificial intelligence 
 - Confidence scoring
 
 ### 🎨 User Interface
-- Intuitive drag-and-drop upload
+- Intuitive photo upload
 - Responsive design for all devices
 - Real-time progress indicators
 - Clean, professional results display
