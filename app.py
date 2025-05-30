@@ -117,6 +117,10 @@ def save_prediction(filename, is_venomous, animal_name, confidence, image_path):
     finally:
         conn.close()
 
+def get_venom_status(is_venomous):
+    """Get consistent venom status label."""
+    return "Venomous" if is_venomous else "Not Venomous"
+
 @app.route('/', methods=['GET'])
 def index():
     """Render the home page."""
@@ -147,8 +151,8 @@ def upload_image():
 
             analysis = analyze_image(filepath)
             if analysis:
-                is_venomous = analysis.get('is_venomous', False)
-                result = "Not Venomous" if is_venomous else "Venomous"
+                is_venomous = analysis['is_venomous']
+                result = get_venom_status(is_venomous)
                 confidence = analysis['confidence']
                 animal_name = analysis['class_name']
                 
@@ -185,6 +189,8 @@ def history():
             pred_dict = dict(pred)
             if isinstance(pred_dict['timestamp'], str):
                 pred_dict['timestamp'] = datetime.strptime(pred_dict['timestamp'], '%Y-%m-%d %H:%M:%S.%f')
+            # Ensure consistent venom status
+            pred_dict['result'] = get_venom_status(pred_dict['is_venomous'])
             predictions_list.append(pred_dict)
         
         conn.close()
