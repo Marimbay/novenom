@@ -24,7 +24,7 @@ DATABASE_PATH = os.path.join(app.root_path, 'novenom.db')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 # AI Server configuration
-AI_SERVER_URL = "http://10.88.17.11:5001/analyze"  # Replace with your laptop's IP address
+AI_SERVER_URL = "http://10.89.56.215:5001/analyze"  # Replace with your laptop's IP address
 
 def cleanup():
     """Clean up database and upload folder when the app exits."""
