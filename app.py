@@ -182,7 +182,8 @@ def upload_image():
                 return render_template('upload.html',
                                      image_url=image_url,
                                      result=result,
-                                     confidence=f"{confidence:.2%}",
+                                     confidence=float(confidence * 100),
+                                     confidence_text=f"{confidence:.2%}",
                                      animal_name=animal_name)
             else:
                 flash('Error analyzing image. Please try again.', 'error')
