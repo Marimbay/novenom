@@ -58,40 +58,33 @@ NoVenom is a Flask-based web application that leverages artificial intelligence 
 
 ## ⚙️ System Requirements
 
-- Python 3.x
+- Python 3.13.2
 - Modern web browser
 - Internet connection
 - 500MB free disk space
 
-## 🚀 Installation
+## 🚀 Configuration
 
-1. **Environment Setup**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # Windows: venv\Scripts\activate
-   ```
-
-2. **Dependencies**
+1. **Dependencies**
    ```bash
    pip install -r requirements.txt
    ```
-
-3. **Database Initialization**
-   ```bash
-   python init_db.py
+```bash
+   # RaspberryPi
+   pip install -r requirements_pi.txt
    ```
-
-## ⚡ Configuration
-
-### AI Server
-```python
-AI_SERVER_URL = "http://your-ai-server:5001/analyze"
-```
-
-### File Storage
-```python
-UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')
-```
+2. **Run ai_server.py on Laptop** 
+   ```bash
+   python3 ai_server.py
+   ```
+   **Change IP address**
+   ```bash
+   AI_SERVER_URL = "http://0.0.0.0:5001/analyze"  # Replace with your laptop's IP address
+   ```
+ **Run app.py on RaspberryPi** 
+   ```bash
+   python3 app.py
+   ```
 
 ## 📁 Application Structure
 
@@ -123,22 +116,23 @@ novenom/
 - Venom status indicator
 - Species identification
 - Confidence metrics
-- Historical data access
+- History of uploads access
 
 ## 🆘 Support
 
 For technical support or inquiries, please contact the development team.
 
 ## 📦 Dependencies
-
-- Flask
-- PyTorch
-- Transformers
-- SQLite3
-- Tailwind CSS
-- Font Awesome
-
----
+```bash
+for ai_server.py
+```
+   **see requirements.txt**
+   
+```bash
+for app.py
+```
+**see requirements_pi.txt**
+  
 
 <div align="center">
 Made with ❤️ by the NoVenom Team
